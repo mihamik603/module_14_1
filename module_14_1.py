@@ -1,10 +1,8 @@
 import sqlite3
 
-# Создаем и подключаемся к базе данных
 conn = sqlite3.connect('not_telegram.db')
 cursor = conn.cursor()
 
-# Создаем таблицу Users, если она еще не создана
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY KEY,
@@ -15,7 +13,6 @@ CREATE TABLE IF NOT EXISTS Users (
 )
 ''')
 
-# Заполняем таблицу 10 записями
 users = [
     ('User1', 'example1@gmail.com', 10, 1000),
     ('User2', 'example2@gmail.com', 20, 1000),
@@ -31,20 +28,18 @@ users = [
 
 cursor.executemany('INSERT INTO Users (username, email, age, balance) VALUES (?, ?, ?, ?)', users)
 
-# Обновляем balance у каждой 2-й записи начиная с 1-й
 cursor.execute('UPDATE Users SET balance = 500 WHERE id % 2 = 1')
 
-# Удаляем каждую 3-ю запись начиная с 1-й
+
 cursor.execute('DELETE FROM Users WHERE id % 3 = 1')
 
-# Выборка всех записей, где возраст не равен 60
 cursor.execute('SELECT username, email, age, balance FROM Users WHERE age != 60')
 results = cursor.fetchall()
 
-# Выводим результаты в консоль
+
 for username, email, age, balance in results:
     print(f'Имя: {username} | Почта: {email} | Возраст: {age} | Баланс: {balance}')
 
-# Закрываем соединение с базой данных
+
 conn.commit()
 conn.close()
